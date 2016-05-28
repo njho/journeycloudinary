@@ -1,0 +1,83 @@
+<!--
+Create tabs with an icon and label, using the tabs-positive style.
+Each tab's child <ion-nav-view> directive will have its own
+navigation history that also transitions its views in and out.
+-->
+<ion-side-menus enable-menu-with-back-views="false">
+  <ion-side-menu-content class="post-size-14px">
+    <ion-nav-bar class="bar-energized">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+
+    <ion-tabs class="tabs-icon-top tabs-color-active-positive">
+
+
+      <!-- Feed Tab -->
+      <ion-tab title="Feed" icon-off="ion-ios-home-outline" icon-on="ion-ios-home" href="#/tab/playlists">
+        <!--TODO unfuck up the ion-nav-view names -->
+        <ion-nav-view name="tab-feed"></ion-nav-view>
+      </ion-tab>
+
+
+      <!-- Record Tab -->
+      <ion-tab title="Journey" icon-off="ion-camera" icon-on="ion-camera" href="#/tab/journey"   on-select="enteringFavorites()" on-deselect="leavingFavorites()">
+        <ion-nav-view name="tab-journey"></ion-nav-view>
+      </ion-tab>
+
+      <!-- Contribute Tab -->
+      <ion-tab title="Contribute!" icon-off="ion-happy-outline" icon-on="ion-happy" href="#/tab/contribute" >
+        <ion-nav-view name="tab-contribute"></ion-nav-view>
+      </ion-tab>
+
+      <!-- Experiences Tab -->
+      <ion-tab title="Experiences" icon-off="ion-ios-location-outline" icon-on="ion-ios-location" href="#/tab/experiences" badge="favCount()" badge-style="badge-assertive"  on-select="enteringFavorites()" on-deselect="leavingFavorites()">
+        <ion-nav-view name="tab-experiences"></ion-nav-view>
+      </ion-tab>
+
+
+    </ion-tabs>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="left" expose-aside-when="large">
+    <ion-content>
+      <ion-list>
+        <!-- TODO None of these plugins work -->
+        <ion-item class="heading-item item item-avatar" nav-clear menu-close ui-sref="app.profile">
+          <div class="user-image-container">
+            <pre-img ratio="_1_1" helper-class="rounded-image">
+
+              <!-- TODO Insert Binding to User Directive Later -->
+              <img class="user-image" ng-src="{{profileUrl}}" spinner-on-load>
+            </pre-img>
+          </div>
+          <!-- TODO Insert Binding to User Directive Later -->
+          <h2 class="greeting">Hi {{displayName}}</h2>
+          <p class="message">Where will your next journey take you?</p>
+        </ion-item>
+
+        <ion-item class = "item-icon-left" nav-clear menu-close ui-sref="tab.bulkLoader">
+          <i class="icon ion-ios-home-outline"></i>
+          <h2 class="menu-text">bulkLoader</h2>
+        </ion-item>
+
+        <ion-toggle ng-model="offline.value" ng-change="connectToggle()" toggle-class="toggle-calm">
+          Offline Mode {{offline.value}}
+        </ion-toggle>
+        <ion-item menu-close ng-click="login()">
+          Login Yo
+        </ion-item>
+        <ion-item menu-close href="#/app/browse">
+          Browse
+        </ion-item>
+        <ion-item menu-close ng-click="logout()">
+          Logout
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>

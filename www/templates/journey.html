@@ -1,0 +1,51 @@
+<ion-view class="settings-view">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-nav-title>
+    <span>  Capture Settings</span>
+  </ion-nav-title>
+  <ion-content>
+
+
+    <ul class="list">
+
+
+
+<div ng-show="captureMode==='true'" ng-hide="captureMode==='false'">
+      <div class="item item-divider " >Phone Orientation</div>
+
+      <ion-radio ng-value="'portrait'"  ng-model="options.orientation" icon="icon ion-android-phone-portrait">Portrait</ion-radio>
+      <ion-radio ng-value="'landscape'"  ng-model="options.orientation" icon="icon ion-android-phone-landscape">Landscape</ion-radio>
+
+
+      <div class="item item-divider">Capture Interval ({{interval}} minutes)</div>
+
+      <div class="item range range-positive">
+        <i class="icon ion-arrow-down-b"></i>
+        <input type="range" name="volume" ng-model="interval" min="0" max="60" >
+        <i class="icon ion-arrow-up-b"></i>
+      </div>
+
+      <div class="item item-divider"></div>
+</div>
+
+      <button  class="button button-block button-assertive" ng-click="click()">
+        Capture
+      </button>
+      <button  class="button button-block button-assertive" ng-click="broadcast()">
+        Broadcast Live
+      </button>
+      <button  class="button button-block button-calm" ng-click="cameraCapture()">
+        Picture
+      </button>
+      <button  class="button button-block button-balanced" ng-click="videoCapture()">
+        Video
+      </button>
+      <button  class="button button-block button-royal" ng-click="audioCapture()">
+        Sound
+      </button>
+    </ul>
+
+  </ion-content>
+</ion-view>

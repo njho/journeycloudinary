@@ -1,0 +1,72 @@
+<ion-view class="settings-view">
+
+  <ion-nav-title>
+    <span>Continuous Capture</span>
+  </ion-nav-title>
+  <ion-content>
+
+
+    <ul class="list">
+
+
+      <div class="item item-divider" ng-click="test()">
+        Current Location: {{lat}}, {{lon}}
+      </div>
+      <div class="item item-divider">
+        <weather-icon icon="current.currently.icon"></weather-icon> {{current.currently.temperature | number: 0}} °C
+      </div>
+      <div >
+        <div class="item item-divider " >Phone Orientation</div>
+
+        <ion-radio ng-value="'landscape'"  ng-model="options.orientation" icon="icon ion-android-phone-portrait">Portrait</ion-radio>
+        <ion-radio ng-value="'portrait'"  ng-model="options.orientation" icon="icon ion-android-phone-landscape">Landscape</ion-radio>
+
+
+        <div class="item item-divider">Capture Interval ({{interval.int}} minutes)</div>
+
+        <div class="item range range-positive">
+          <i class="icon ion-arrow-down-b"></i>
+          <input type="range" name="volume" ng-model="interval.int" min="0" max="60" >
+          <i class="icon ion-arrow-up-b"></i>
+        </div>
+
+        <div class="item item-divider"></div>
+      </div>
+
+
+      <label class="item item-input ">
+        <input type="text" class="journey-title" ng-model="journey.title" placeholder="Enter a Title">
+      </label>
+
+
+      <label class="item item-input">
+        <textarea ng-model="journey.description"
+                  placeholder="Please enter a description for this experience"></textarea>
+      </label>
+
+      <div ng-show="new" class="item item-divider">
+        <i class="ion-images"></i>
+        Choose from an existing Journey
+      </div>
+      <a class="item item-list-detail" ng-show="!new">
+        <ion-scroll direction="x">
+
+          <li class="journeypicker" ng-repeat="entry in experiences">
+            <img ng-src="{{entry.imageUrl}}" ng-click="broadcast(entry.key)" class="image-list-thumb"/>
+            </br>
+            <span align="center"><h2>{{entry.title}}</h2></span>
+          </li>
+          <li class="journeypicker" ng-repeat="entry in offlineExp">
+            <img ng-src="{{entry.imageUrl}}" ng-click="broadcast(entry.timeStamp)" class="image-list-thumb"/>
+            </br>
+            <span align="center"><h2>OffL: {{entry.title}}</h2></span>
+          </li>
+        </ion-scroll>
+      </a>
+
+
+
+
+    </ul>
+  </ion-content>
+</ion-view>

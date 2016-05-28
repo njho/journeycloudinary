@@ -1,0 +1,20 @@
+<ion-view view-title="  Bulk Loader" class="settings-view">
+
+  <ion-content>
+
+    <h3>Click on one to bulk upload collection</h3>
+
+      <ion-item class="item-thumbnail-left item-icon-right"  ng-repeat="entry in offlineExp" ng-click="bulkLoad(entry.timeStamp)">
+
+        <img ng-src="{{entry.imageUrl}}">
+        <h2> {{entry.title}}</h2><weather-icon icon="entry.weather"></weather-icon>
+        <h3>{{entry.timeStamp*1000 | date: "MMM dd, yyyy h:mma" }}</h3>
+        <h4> {{entry.description}}</h4>
+        <h4>{{entry.location}}</h4>
+
+      </ion-item>
+
+    </ion-list>
+
+  </ion-content>
+</ion-view>

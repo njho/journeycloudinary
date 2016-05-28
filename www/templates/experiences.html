@@ -1,0 +1,50 @@
+<ion-view view-title="  Your Experiences" class="settings-view">
+
+  <ion-content>
+
+    <ion-list>
+      <ion-item class="item-thumbnail-left item-icon-right"  ng-repeat="entry in list" ng-click="openSong(song)" href="#/tab/experiences/{{entry.id}}">
+
+        <img ng-src="{{entry.image}}">
+        <h2> {{entry.name}}</h2><i class="{{entry.weather}} " style="float:right; font-size: 40px"></i>
+        <h3>{{entry.date}}</h3>
+        <h4> {{entry.description}}</h4>
+        <h4>{{entry.location}}</h4>
+        <ion-option-button class="button-assertive" ng-click="removeSong(song,$index)">
+          <i class="button-assertive">Delete?</i>
+        </ion-option-button>
+      </ion-item>
+
+    </ion-list>
+
+    <ion-list>
+      <ion-item class="item-thumbnail-left item-icon-right"  ng-repeat="entry in experiences" href="#/tab/experiences/{{entry.key}}">
+
+        <img ng-src="{{entry.imageUrl}}">
+        <h2> {{entry.title}}</h2><weather-icon icon="entry.weather"></weather-icon>
+        <h3>{{entry.timeStamp | date: "MMM dd, yyyy h:mma" }}</h3>
+        <h4> {{entry.description}}</h4>
+        <h4>{{entry.location}}</h4>
+        <ion-option-button class="button-assertive" ng-click="removeSong(song,$index)">
+          <i class="button-assertive">Delete?</i>
+        </ion-option-button>
+      </ion-item>
+      <!-- onslidestart, activeindex, id, getElem by Id() of video player, start nextOne, stop last vid.
+       Utilize Lazy Loader, track by $index-->
+
+      <ion-item class="item-thumbnail-left item-icon-right"  ng-repeat="entry in offlineExp" href="#/tab/experiences/{{entry.timeStamp}}">
+
+        <img ng-src="{{entry.imageUrl}}">
+        <h2> {{entry.title}}</h2><weather-icon icon="entry.weather"></weather-icon>
+        <h3>{{entry.timeStamp | date: "MMM dd, yyyy h:mma" }}</h3>
+        <h4> {{entry.description}}</h4>
+        <h4>{{entry.location}}</h4>
+        <ion-option-button class="button-assertive" ng-click="removeSong(song,$index)">
+          <i class="button-assertive">Delete?</i>
+        </ion-option-button>
+      </ion-item>
+
+    </ion-list>
+
+  </ion-content>
+</ion-view>

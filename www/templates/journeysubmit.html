@@ -1,0 +1,97 @@
+<ion-view class="settings-view">
+
+  <ion-nav-title>
+    <span>Submit</span>
+  </ion-nav-title>
+  <ion-content>
+
+
+    <ul class="list">
+      <div>
+        <div class="box">
+          <span class="caption simplecaption" style="padding-top: 0px;"><weather-icon icon="current.currently.icon"></weather-icon><br>
+          {{current.currently.temperature | number: 0}} °C
+          </span>
+          <video class="submit" width="100%" ng-if="mimeType === 'video/mp4'" autoplay controls>
+            <source ng-src="{{url}}" type="video/mp4">
+          </video>
+          <audio ng-if="mimeType ===cordo 'audio/mp4'" autoplay loop controls>
+            <source ng-src="{{url}}" type="audio/mp4">
+            Your browser does not support the audio element.
+          </audio>
+          <img class="submit" ng-src="{{url}}" ng-if="mimeType === 'image/jpg'">
+        </div>
+        <!--<div class="submitWeather item-icon-right">
+          <i ng-class="{'icon ion-android-sunny' : current.icon == 'clear-day', 'icon ion-ios-moon-outline': current.icon == 'clear-night'}"
+            ng-click="liked!=liked"></i>
+        </div>
+      </div>
+
+
+      <div class="submitWeather item-icon-right">
+        <i
+          ng-class="{'icon ion-android-sunny' : current.icon == 'clear-day', 'icon ion-ios-moon-outline': current.icon == 'clear-night'}"
+          ng-click="liked!=liked"></i>-->
+      </div>
+
+
+      <div class="item item-divider">
+        Current Location: {{lat}}, {{lon}}
+      </div>
+      <label class="item item-input ">
+        <input type="text" class="journey-title" ng-model="journey.title" placeholder="Enter a Title">
+      </label>
+
+
+      <label class="item item-input">
+        <textarea ng-model="journey.description"
+                  placeholder="Please enter a description for this experience"></textarea>
+      </label>
+
+      <div ng-show="!new" class="item item-divider">
+        <i class="ion-images"></i>
+        Choose A Journey
+      </div>
+
+      <button ng-show="new" ng-click="uploadNew()" class="button button-block button-assertive">
+        Submit
+      </button>
+
+      <div ng-click="toggle()" ng-show="new" class="item item-divider">
+        <i class="ion-images"></i>
+        Or choose from an existing Journey
+      </div>
+      <a class="item item-list-detail" ng-show="!new">
+        <ion-scroll direction="x">
+          <li class="journeypicker">
+            <img ng-src="img/add-new.png" ng-click="toggle()" class="image-list-thumb"/>
+            </br>
+            <span align="center"><h2>Add New</h2></span>
+          </li>
+          <!-- Only hard coded... Remove later-->
+
+          <li class="journeypicker" ng-repeat="entry in picker">
+            <img ng-src="{{entry.image}}" ng-click="" class="image-list-thumb"/>
+            </br>
+            <span align="center"><h2>{{entry.name}}</h2></span>
+          </li>
+
+          <li class="journeypicker" ng-repeat="entry in experiences">
+            <img ng-src="{{entry.imageUrl}}" ng-click="update(entry.key)" class="image-list-thumb"/>
+            </br>
+            <span align="center"><h2>{{entry.title}}</h2></span>
+          </li>
+          <li class="journeypicker" ng-repeat="entry in offline">
+            <img ng-src="{{entry.imageUrl}}" ng-click="update(entry.timeStamp)" class="image-list-thumb"/>
+            </br>
+            <span align="center"><h2>OffL: {{entry.title}}</h2></span>
+          </li>
+        </ion-scroll>
+      </a>
+
+
+
+
+    </ul>
+  </ion-content>
+</ion-view>

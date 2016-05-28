@@ -1,0 +1,17 @@
+{
+  "name": "HelloIonic",
+  "private": "true",
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.2.4",
+    "cryptojslib": "^3.1.2"
+  },
+  "dependencies": {
+    "ngmap": "~1.16.7",
+    "animate.css": "^3.5.1",
+    "firebase": "^2.4.2",
+    "moment": "^2.13.0"
+  },
+  "resolutions": {
+    "angular": "^1.3.0"
+  }
+}
