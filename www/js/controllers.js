@@ -95,8 +95,8 @@ angular.module('journey.controllers', ['journey.services'])
         var i, path, len;
         for (i = 0, len = mediaFiles.length; i < len; i += 1) {
           path = mediaFiles[i].fullPath;
-          path = path.replace("file:", "");
-          /*path = path.replace("file:/", "file:///");*/
+          /*path = path.replace("file:", "");*/
+          path = path.replace("file:/", "file:///");
           console.log(' this is the returned path: ' + path);
           captureService.mimeType = 'video/mp4';
           captureService.url = path;
@@ -274,7 +274,6 @@ angular.module('journey.controllers', ['journey.services'])
   }])
 
   .controller('continuousCtrl', ['$scope', 'captureService', 'experiencesService', 'Amazon', 'User', '$state', 'FirebaseUrl', '$timeout', '$cordovaGeolocation', 'weatherApi', '$firebaseArray', '$rootScope', 'fireLoader', 'amaLoader', '$localStorage', '$ionicPlatform', '$interval', '$ionicLoading', function ($scope, captureService, experiencesService, Amazon, User, $state, FirebaseUrl, $timeout, $cordovaGeolocation, weatherApi, $firebaseArray, $rootScope, fireLoader, amaLoader, $localStorage, $ionicPlatform, $interval, $ionicLoading) {
-
 
     $ionicPlatform.ready(function () {
 
@@ -518,7 +517,7 @@ angular.module('journey.controllers', ['journey.services'])
     $scope.journey = {};
     $scope.journey.title = '';
     $scope.journey.description = '';
-    var filename = encodeURI($scope.url.replace(/^.*[\\\/]/, ''));
+    var filename = encodeURI($scope.url.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, ""));
 
     if ($rootScope.offline.value === false) {
       $scope.experiences = {};
@@ -585,7 +584,9 @@ angular.module('journey.controllers', ['journey.services'])
         weather: $scope.current.currently.icon,
         temp: $scope.current.currently.temperature,
         mimeType: $scope.mimeType,
-        live: false
+        live: false,
+        type: 'update',
+        filename: filename
       };
 
       if ($rootScope.offline.value === true) {
@@ -600,8 +601,11 @@ angular.module('journey.controllers', ['journey.services'])
         fireLoader.upload(info, parentKey, filename);
 
         var amazonParams = Amazon.upload($scope.url, $scope.mimeType, User.profile.lid, parentKey);
+        //May not be required anymore
         console.log(amazonParams);
-        amaLoader.upload($scope.url, amazonParams.Uoptions, $scope.title);
+
+        //new provision for new upload V1.0
+        amaLoader.upload($scope.url, amazonParams.Uoptions, info, User.profile.lid, parentKey);
       }
 
     };
@@ -611,6 +615,7 @@ angular.module('journey.controllers', ['journey.services'])
         title: $scope.journey.title,
         description: $scope.journey.description,
         timeStamp: $scope.timeStamp,
+        //This isn't actually carried through to anywhere. Should actually be removed
         imageUrl: $scope.url,
         lat: $scope.lat,
         lon: $scope.lon,
@@ -620,7 +625,9 @@ angular.module('journey.controllers', ['journey.services'])
         weather: $scope.current.currently.icon,
         temp: $scope.current.currently.temperature,
         mimeType: $scope.mimeType,
-        live: false
+        live: false,
+        type: 'new',
+        filename: filename
       };
 
       if ($rootScope.offline.value === true) {
@@ -658,7 +665,7 @@ angular.module('journey.controllers', ['journey.services'])
         var amazonParams = Amazon.upload($scope.url, $scope.mimeType, User.profile.lid, newJourneyKey);
         console.log(amazonParams);
         //url, parameters, title
-        amaLoader.upload($scope.url, amazonParams.Uoptions, $scope.title);
+        amaLoader.upload($scope.url, amazonParams.Uoptions, info, User.profile.lid, newJourneyKey);
 
       }
 

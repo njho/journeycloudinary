@@ -34,7 +34,7 @@
             <video id="video{{$index}}" ng-if="slide.imageUrl.substr(slide.imageUrl.lastIndexOf('.')+1) == 'mp4'" class="portrait" width="100%" controls loop>
               <source ng-src="{{getUrl($index)}}" type="video/mp4">
             </video>
-            <video id="audio{{$index}}" width="100%" ng-if="slide.imageUrl.substr(slide.imageUrl.lastIndexOf('.')+1) == 'm4a'" controls loop>
+            <video id="audio{{$index}}" width="100%" ng-if="slide.imageUrl.substr(slide.imageUrl.lastIndexOf('.')+1) == 'm4a'" controls >
               <source ng-src="{{getUrl($index)}}" type="audio/mp4">
               Your browser does not support the audio element.
             </video>
