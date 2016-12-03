@@ -9,17 +9,18 @@
     <ul class="list">
       <div>
         <div class="box">
-          <span class="caption simplecaption" style="padding-top: 0px;"><weather-icon icon="current.currently.icon"></weather-icon><br>
+          <span class="caption simplecaption" style="padding-top: 0px;">
+            <weather-icon icon="current.currently.icon"></weather-icon><br>
           {{current.currently.temperature | number: 0}} °C
           </span>
           <video class="submit" width="100%" ng-if="mimeType === 'video/mp4'" autoplay controls>
             <source ng-src="{{url}}" type="video/mp4">
           </video>
-          <audio ng-if="mimeType ===cordo 'audio/mp4'" autoplay loop controls>
+          <audio ng-if="mimeType === 'audio/mp4'" autoplay loop controls>
             <source ng-src="{{url}}" type="audio/mp4">
             Your browser does not support the audio element.
           </audio>
-          <img class="submit" ng-src="{{url}}" ng-if="mimeType === 'image/jpg'">
+          <img class="submit" ng-src="{{url}}" ng-if="mimeType === 'image/jpeg'">
         </div>
         <!--<div class="submitWeather item-icon-right">
           <i ng-class="{'icon ion-android-sunny' : current.icon == 'clear-day', 'icon ion-ios-moon-outline': current.icon == 'clear-night'}"

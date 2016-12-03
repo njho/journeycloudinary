@@ -20,7 +20,7 @@
     <ion-list>
       <ion-item class="item-thumbnail-left item-icon-right"  ng-repeat="entry in experiences" href="#/tab/experiences/{{entry.key}}">
 
-        <img ng-src="{{entry.imageUrl}}">
+        <img ng-src="{{entry.imageUrl.substr(entry.imageUrl.lastIndexOf('.')+1) === 'm4a' && '/img/audio.png' || entry.imageThumb}}">
         <h2> {{entry.title}}</h2><weather-icon icon="entry.weather"></weather-icon>
         <h3>{{entry.timeStamp | date: "MMM dd, yyyy h:mma" }}</h3>
         <h4> {{entry.description}}</h4>

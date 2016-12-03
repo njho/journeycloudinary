@@ -1,19 +1,57 @@
 <ion-view class="view-login" view-title="SignIn">
 
-    <ion-content padding="false" scroll="false">
 
-        <div class="user-head padding text-center step1">
+
+    <ion-content class="view-login" padding="false" scroll="false">
+
+
+        <div class="user-head padding text-center step4">
             <div class="logo2">
-                <img src="img/icon.png">
-                <img class="signinlogo" src="img/Logoheader.svg">
+              <!--  <img src="img/icon2.png">-->
+
             </div>
+          <div class="signinlogo" style="color: #fcffde; font-size: 60px;">  JOURNEY</div>
+         <!-- <img class="signinlogo" src="img/Logoheader.png ">-->
 
-            <h2 class="step2">Share What You Find Is Beautiful</h2>
 
-            <ion-tabs class="tabs-positive tabs-top">
+<!--            <ion-tabs class="tabs-positive tabs-top">
                 <ion-tab title="Sign In" ui-sref="user.signin"></ion-tab>
-            </ion-tabs>
+            </ion-tabs>-->
+<!--          <div class="step3 padding">
+            <button ng-click="authCtrl.login()" class="button button-block button-facebook"><i
+              class="icon ion-social-facebook"></i>
+              <span>Login With Facebook!</span>
+            </button>
+          </div>-->
         </div>
-        <ion-nav-view class="step3" name="tabLogin"></ion-nav-view>
+
+      <div style="color: #fcffde; text-align: center; padding-top: 50px; font-size: 20px">
+        Where Does Yours Start?
+      </div>
+
+
+
+<!--        <ion-nav-view class="step3" name="tabLogin"></ion-nav-view>-->
     </ion-content>
+  <div class="fixed-outside">
+    <div class="row">
+
+      <div class="col step3">
+        <button ng-click="authCtrl.login()" class="button button-block button-facebook"><i
+          class="icon ion-social-facebook"></i>
+          <span>Login With Facebook!</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+
+<!--  <ion-footer-bar align-title="left" class="bar-assertive">
+    <button ng-click="authCtrl.login()" class="step3 button-facebook"><i
+      class="icon ion-social-facebook"></i>
+      <span>Login With Facebook!</span>
+    </button>
+  </ion-footer-bar>-->
 </ion-view>

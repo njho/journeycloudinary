@@ -7,10 +7,24 @@ angular.module('journey.services', ['ngResource'])
 
   })
 
+  .factory('contribService', function() {
+    var o = {};
+    o.contribId = '';
+    o.setContrib = function(id) {
+      o.contribId = id;
+      console.log('this is the contribId');
+      console.log('this is the contribId' + o.contribId);
+      console.log(o.contribId);
+    }
+
+    return o;
+  })
+
   .factory('captureService', function ($rootScope) {
     var o = {};
     o.url = "";
     o.mimeType = '';
+    o.key = '';
     return o;
   })
 
@@ -445,7 +459,23 @@ angular.module('journey.services', ['ngResource'])
       var parentKey = parentKey;
       var info = info;
       var filename = filename;
+      var extension;
+      var root;
 
+      switch (info.mimeType) {
+        case 'image/jpeg':
+          extension = '.jpg';
+          root = "https://res.cloudinary.com/dem9ilv6g/image/upload/";
+          break;
+        case 'audio/mp4':
+          extension = '.m4a';
+          root = "https://s3-us-west-2.amazonaws.com/journeyapp/"
+          break;
+        case 'video/mp4':
+          extension = '.mp4';
+          root = "https://res.cloudinary.com/dem9ilv6g/video/upload/";
+          break;
+      };
 
       var ref = new Firebase(FirebaseUrl);
 
@@ -464,8 +494,8 @@ angular.module('journey.services', ['ngResource'])
         key: newExpKey,
         title: info.title,
         description: info.description,
-        imageUrl: "https://s3-us-west-2.amazonaws.com/journeyapp/" + User.profile.lid + "/" + parentKey + '/' + filename,
-        timeStamp: info.timeStamp*1000,
+        imageUrl: root + User.profile.lid + "/" + parentKey + '/' + filename + extension,
+        timeStamp: info.timeStamp * 1000,
         lat: info.lat,
         lon: info.lon,
         user: info.user,
@@ -492,6 +522,28 @@ angular.module('journey.services', ['ngResource'])
       var filename = filename;
       var newJourneyRef = newJourneyRef;
       var newJourneyKey = newJourneyKey;
+      var extension;
+      var root;
+      var thumbRoot;
+
+
+      switch (info.mimeType) {
+        case 'image/jpeg':
+          extension = '.jpg';
+          root = "https://res.cloudinary.com/dem9ilv6g/image/upload/";
+          thumbRoot = "https://res.cloudinary.com/dem9ilv6g/image/upload/c_thumb,h_150,w_150/";
+          break;
+        case 'audio/mp4':
+          extension = '.m4a';
+          root = "https://s3-us-west-2.amazonaws.com/journeyapp/"
+          break;
+        case 'video/mp4':
+          extension = '.mp4';
+          root = "https://res.cloudinary.com/dem9ilv6g/video/upload/";
+          thumbRoot = "https://res.cloudinary.com/dem9ilv6g/video/upload/";
+          break;
+      };
+
 
       var ref = new Firebase(FirebaseUrl);
       var newEntryRef = ref.child('journeyfire').child(newJourneyKey).push();
@@ -505,8 +557,9 @@ angular.module('journey.services', ['ngResource'])
         user: info.user,
         title: info.title,
         description: info.description,
-        imageUrl: "https://s3-us-west-2.amazonaws.com/journeyapp/" + User.profile.lid + "/" + newJourneyKey + '/' + filename,
-        timeStamp: info.timeStamp*1000,
+        imageUrl: root + User.profile.lid + "/" + newJourneyKey + '/' + filename + extension,
+        imageThumb: thumbRoot + User.profile.lid + "/" + newJourneyKey + '/' + filename + '.jpg',
+        timeStamp: info.timeStamp * 1000,
         lat: info.lat,
         lon: info.lon,
         weather: info.weather,
@@ -521,8 +574,8 @@ angular.module('journey.services', ['ngResource'])
         key: newJourneyKey,
         title: info.title,
         description: info.description,
-        imageUrl: "https://s3-us-west-2.amazonaws.com/journeyapp/" + User.profile.lid + "/" + newJourneyKey + '/' + filename,
-        timeStamp: info.timeStamp*1000,
+        imageUrl: root + User.profile.lid + "/" + newJourneyKey + '/' + filename + extension,
+        timeStamp: info.timeStamp * 1000,
         lat: info.lat,
         lon: info.lon,
         user: info.user,
@@ -537,11 +590,11 @@ angular.module('journey.services', ['ngResource'])
         key: newJourneyKey,
         title: info.title,
         description: info.description,
-        setImageUrl: "https://s3-us-west-2.amazonaws.com/journeyapp/" + User.profile.lid + "/" + newJourneyKey + '/' + filename,
+        setImageUrl: root + User.profile.lid + "/" + newJourneyKey + '/' + filename + extension,
         user: info.user,
         userImg: info.userImg,
         likes: info.likes,
-        timeStart: info.timeStamp*1000,
+        timeStart: info.timeStamp * 1000,
         contrib: 'true'
       };
       console.log('from inside firebase update: ');
@@ -560,35 +613,132 @@ angular.module('journey.services', ['ngResource'])
 
   })
 
-  .factory('amaLoader', function ($cordovaFileTransfer, $ionicLoading, $state) {
+  .factory('amaLoader', function ($q, $cordovaFileTransfer, $ionicLoading, $state) {
 
     var o = {};
 
-    o.upload = function (url, parameters, title) {
+    o.upload = function (url, params, info, uid, eid) {
+      var info = info;
       var url = url;
-      var params = parameters;
-      var title = title;
-
-      $cordovaFileTransfer.upload("https://journeyapp.s3.amazonaws.com/", url, params, title)
-        .then(function (result) {
-          // Success!
-          // Let the user know the upload is completed
-          $ionicLoading.show({template: 'Upload Success!', duration: 3000});
-          console.log('upload to s3 succeed ', result);
-          $state.go('tab.journey');
+      var filename = info.filename;
+      console.log('upload filename:' + info.filename);
+      console.log(filename);
+      var preset;
+      var resourceType;
 
 
-        }, function (err) {
-          // Error
-          // Uh oh!
-          $ionicLoading.show({template: 'Upload Failed', duration: 3000});
-          console.log('upload to s3 fail ', err);
-        }, function (progress) {
+      //Honestly, I'd like to change this so that I upload a JSON object which has all this information. This is kinda shitty.
+      switch (info.type) {
+        case 'new':
+          preset = 'newjourney';
+          console.log(preset);
+          break;
+        case 'update':
+          preset = 'addjourney';
+          console.log(preset);
+          break;
+      }      ;
 
-          // constant progress updates
+      switch (info.mimeType) {
+        case 'video/mp4':
+          resourceType = 'video';
+          console.log('video');
+          break;
+        case 'image/jpeg':
+          resourceType = 'auto';
+          console.log('image');
+          break;
+      };
+
+      console.log(url);
+      console.log(info);
+
+      if (info.mimeType === "audio/mp4") {
+        var url = url;
+        var params = params;
+
+        $cordovaFileTransfer.upload("https://journeyapp.s3.amazonaws.com/", url, params)
+          .then(function (result) {
+            // Success!
+            // Let the user know the upload is completed
+            $ionicLoading.show({template: 'Upload Success!', duration: 3000});
+            console.log('upload to s3 succeed ', result);
+            $state.go('tab.journey');
+
+
+          }, function (err) {
+            // Error
+            // Uh oh!
+            $ionicLoading.show({template: 'Upload Failed', duration: 3000});
+            console.log('upload to s3 fail ', err);
+          }, function (progress) {
+
+            // constant progress updates
+          });
+
+      } else {
+
+        var deferred = $q.defer();
+        var fileSize;
+        var percentage;
+        // Find out how big the original file is
+        window.resolveLocalFileSystemURL(url, function (fileEntry) {
+          console.log('from inside uploader');
+          console.log(url);
+          fileEntry.file(function (fileObj) {
+
+            fileSize = fileObj.size;
+            console.log('fileSize');
+            console.log(fileSize);
+            // Display a loading indicator reporting the start of the upload
+            $ionicLoading.show({template: 'Uploading Picture : ' + 0 + '%'});
+            // Trigger the upload
+            uploadFile();
+          });
         });
+        function uploadFile() {
+          console.log('uploadFile filename:' + filename);
+          console.log(filename);
+          // Add the Cloudinary "upload preset" name to the headers
+          var uploadOptions = {
+            params: {
+              'resource_type': resourceType,
+              'upload_preset': preset,
+              'folder': uid + '/' + eid + '/',
+              'public_id': filename
+            }  //CLOUDINARY_CONFIGS.UPLOAD_PRESET
+          };
+          $cordovaFileTransfer
+          // Your Cloudinary URL will go here
+            .upload('https://api.cloudinary.com/v1_1/dem9ilv6g/' + resourceType + '/upload', url, uploadOptions)  //
+
+            .then(function (result) {
+              // Let the user know the upload is completed
+              $ionicLoading.show({template: 'Upload Completed', duration: 1000});
+              // Result has a "response" property that is escaped
+              // FYI: The result will also have URLs for any new images generated with
+              // eager transformations
+              var response = JSON.parse(decodeURIComponent(result.response));
+              deferred.resolve(response);
+              $state.go('tab.journey');
+            }, function (err) {
+              // Uh oh!
+              $ionicLoading.show({template: 'Upload Failed', duration: 3000});
+              console.log(err);
+              deferred.reject(err);
+            }, function (progress) {
+              // The upload plugin gives you information about how much data has been transferred
+              // on some interval.  Use this with the original file size to show a progress indicator.
+              percentage = Math.floor(progress.loaded / fileSize * 100);
+              $ionicLoading.show({template: 'Uploading Picture : ' + percentage + '%'});
+            });
+        }
+
+        return deferred.promise;
+      };
 
     };
+
 
     return o;
 

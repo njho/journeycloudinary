@@ -69,6 +69,13 @@ angular.module('starter', ['ionic', 'firebase', 'journey.controllers', 'journey.
 
       .state('user', {
         url: '/user',
+        templateUrl: 'templates/user.html',
+        controller: 'AuthCtrl',
+        controllerAs: 'authCtrl'
+      })
+
+      /*.state('user', {
+        url: '/user',
         abstract: true,
         templateUrl: 'templates/user.html'
       })
@@ -97,7 +104,7 @@ angular.module('starter', ['ionic', 'firebase', 'journey.controllers', 'journey.
           }
         },
 
-      })
+      })*/
 
       .state('tab', {
         url: '/tab',
@@ -121,10 +128,11 @@ angular.module('starter', ['ionic', 'firebase', 'journey.controllers', 'journey.
           auth: function ($state, Auth, $localStorage) {
             if ($localStorage.storageAuth) {
               console.log('User existing in Local Storage from feed: ' + $localStorage.storageAuth.token);
+              return;
             } else {
               return Auth.$requireAuth().catch(function () {
                 console.log("Auth.$requireAuth() did not fulfill.");
-                $state.go('user.signin');
+                $state.go('user');
               });
             };
           },
@@ -141,6 +149,7 @@ angular.module('starter', ['ionic', 'firebase', 'journey.controllers', 'journey.
               $rootScope.offline = {
                 value: $localStorage.offline
               }
+              return;
             } else {
               console.log('should be in offline mode');
               $rootScope.offline= {
@@ -231,7 +240,6 @@ angular.module('starter', ['ionic', 'firebase', 'journey.controllers', 'journey.
                 console.log('balls');
                 return $localStorage[$stateParams.key];
               }
-
             }
 
           }
@@ -255,9 +263,55 @@ angular.module('starter', ['ionic', 'firebase', 'journey.controllers', 'journey.
             controller: 'contributeCtrl'
           }
         }
-
       })
 
+
+      .state('tab.contrib', {
+        url: '/contribute/:userId',
+        views: {
+          'tab-contribute': {
+            templateUrl: 'templates/contribExp.html',
+            controller: 'contribSelect'
+          }
+        },
+        resolve: {
+          contribExperiences: function (Firebase, FirebaseUrl, $firebaseArray, $stateParams) {
+            var indexRef = new Firebase(FirebaseUrl + 'user_meta/').child($stateParams.userId);
+            console.log($stateParams.userId);
+            return $firebaseArray(indexRef);
+          }
+        }
+      })
+
+      .state('tab.contribCapture', {
+        url: '/contribute/:userId/:key',
+        views: {
+          'tab-contribute': {
+            templateUrl: 'templates/contribCapture.html',
+            controller: 'contribCapture'
+          }
+        }
+      })
+
+      .state('tab.contribSubmit', {
+        url: '/contribute/:userId/:key/submit',
+        views: {
+          'tab-contribute': {
+            templateUrl: 'templates/contribSubmit.html',
+            controller: 'contribSubmitCtrl'
+          }
+        }
+      })
+
+      .state('tab.settings', {
+        url: '/settings',
+        views: {
+          'tab-settings': {
+            templateUrl: 'templates/settings.html',
+            controller: 'settingsCtrl'
+          }
+        }
+      })
 
       .state('tab.single', {
         url: '/playlists/:playlistId',
@@ -269,7 +323,7 @@ angular.module('starter', ['ionic', 'firebase', 'journey.controllers', 'journey.
         }
       });
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/user/signin');
+    $urlRouterProvider.otherwise('/user');
   })
 
   .constant('FirebaseUrl', 'https://journeyapp91.firebaseio.com/')

@@ -9745,6 +9745,14 @@ a.button {
   padding-top: 0px !important;
   padding-bottom: 0px !important; }
 
+.fixed-outside {
+  position: absolute;
+  bottom: 0;
+  color: white;
+  width: 100%;
+  height: 80px;
+  text-align: center; }
+
 .journeypicker {
   display: inline-block; }
 
@@ -9760,9 +9768,9 @@ a.button {
   display: inline !important; }
 
 .box {
-  border: 5px solid #fff;
+  /*border: 5px solid #fff;*/
   height: auto;
-  margin: 5px;
+  /*margin: 5px;*/
   padding-right: 10px;
   clear: right;
   position: relative;
@@ -9925,18 +9933,35 @@ map {
   opacity: 0.5; }
 
 .experienceDescription {
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
   display: flex;
   align-items: center;
   position: absolute;
+  bottom: 0px;
   background-color: black;
-  opacity: 0.75;
+  opacity: 0.80;
   width: 100%;
   color: white;
   z-index: 100;
   min-height: 50px;
+  border-radius: 5px 5px 0px 0px;
+  justify-content: space-between; }
+
+.experienceDescriptionTwo {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 9px;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  background-color: black;
+  opacity: 0.85;
+  width: 100%;
+  color: white;
+  z-index: 100;
+  min-height: 15px;
   border-radius: 0px 0px 5px 5px;
   justify-content: space-between; }
 
@@ -9945,11 +9970,15 @@ map {
   float: left; }
 
 .weatherContainer {
-  float: right !important;
+  /*float: right !important;*/
   display: flex;
   align-items: center; }
   .weatherContainer span {
     display: inline !important; }
+
+.alignCenter {
+  display: flex;
+  align-items: center; }
 
 .icon.ion-ios-heart.red {
   color: red;
@@ -10292,6 +10321,30 @@ button.button-comment {
   animation-fill-mode: both;
   backface-visibility: hidden; }
 
+.step4 {
+  -o-animation-name: bounceInDown;
+  -o-animation-delay: 0.5s;
+  -o-animation-duration: 1.2s;
+  -o-animation-timing-function: ease;
+  -o-animation-fill-mode: both;
+  -moz-animation-name: bounceInDown;
+  -moz-animation-delay: 0.5s;
+  -moz-animation-duration: 1.2s;
+  -moz-animation-timing-function: ease;
+  -moz-animation-fill-mode: both;
+  -webkit-animation-name: bounceInDown;
+  -webkit-animation-delay: 0.5s;
+  -webkit-animation-duration: 1.2s;
+  -webkit-animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+  -webkit-backface-visibility: hidden;
+  animation-name: bounceInDown;
+  animation-delay: 0.5s;
+  animation-duration: 1.2s;
+  animation-timing-function: ease;
+  animation-fill-mode: both;
+  backface-visibility: hidden; }
+
 .button {
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
@@ -10319,8 +10372,21 @@ button.button-comment {
 .view-avatar .step2 {
   margin-top: 20px; }
 
+.signinlogo {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  max-width: 340px;
+  margin-top: 45%; }
+
 .view-login .scroll-content {
-  padding: 0; }
+  padding: 0;
+  background: url("../img/bg2.png") no-repeat center;
+  background-size: cover;
+  position: absolute;
+  magin-left: auto;
+  magin-right: auto; }
 
 .view-login .scroll {
   height: 100%;
@@ -10329,16 +10395,21 @@ button.button-comment {
 .view-login .user-head {
   background-color: #387ef5;
   background-position: 50%;
-  background: url("../img/bg.jpg");
+  background: url("../img/.jpg");
   background-size: cover;
   position: relative;
-  height: 400px; }
-  .view-login .user-head .logo2 {
-    position: relative;
-    display: block;
-    margin: 20px auto;
-    width: 250px;
-    /*
+  height: 400px;
+  /*  .logo2 {
+      position: relative;
+      display: block;
+      margin: 20px auto;
+      width: 400px;
+
+      img {
+        width: 180px;
+      }
+
+!*
       span.icon2-logo {
         font-size: 45pt;
         color: #fff;
@@ -10348,12 +10419,8 @@ button.button-comment {
         top: 0px;
         left: 20%;
       }
-      */ }
-    .view-login .user-head .logo2 img {
-      width: 180px; }
-    .view-login .user-head .logo2 .signinlogo {
-      position: relative;
-      top: -50px; }
+      *!
+    }*/ }
   .view-login .user-head h2 {
     color: #fff;
     font-size: 16px;
@@ -10429,10 +10496,57 @@ button.button-comment {
   border: 1px solid #222e52;
   color: #fff !important;
   position: relative;
+  bottom: 0px;
   width: 100%; }
   .button-facebook i {
     border-right: 1px solid rgba(255, 255, 255, 0.3);
-    left: 20px;
-    padding-right: 10px;
+    left: 15px;
+    padding-right: 15px;
     position: absolute;
     width: 30px; }
+
+.scroll-content .scroll, .bookmarks-container {
+  height: 100%; }
+
+.empty-results {
+  text-align: center; }
+
+.empty-results .icon {
+  font-size: 170px;
+  color: #d1d1d1; }
+
+.empty-results .no-bookmarks {
+  color: #d1d1d1;
+  font-size: 22px; }
+
+.bookmarks-view .bookmarks-list {
+  overflow-y: scroll;
+  height: 100%; }
+
+.bookmarks-view .bookmarks-list::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important; }
+
+.bookmarks-view .bookmark-item {
+  padding: 10px 0px;
+  border-bottom: 1px solid rgba(30, 30, 30, 0.2);
+  margin: 0px 16px; }
+
+.bookmarks-view .bookmark-item * {
+  text-decoration: none;
+  color: #444444; }
+
+.bookmarks-view .bookmark-item .post-title {
+  margin: 0px;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: -1px; }
+
+.bookmarks-view .bookmark-item .post-date {
+  margin: 0px;
+  font-size: 12px;
+  font-weight: 200;
+  color: rgba(94, 94, 94, 0.7); }
+
+.bookmarks-view .bookmark-item .post-time {
+  color: rgba(43, 43, 43, 0.9); }

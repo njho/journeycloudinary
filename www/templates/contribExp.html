@@ -1,0 +1,20 @@
+<ion-view view-title="Contribute to their Journey!" class="settings-view">
+
+  <ion-content>
+
+    <ion-list>
+      <ion-item class="item-thumbnail-left item-icon-right"  ng-repeat="entry in experiences" href="#/tab/contribute/{{userId}}/{{entry.key}}">
+
+        <img ng-src="{{entry.imageUrl.substr(entry.imageUrl.lastIndexOf('.')+1) === 'm4a' && '/img/audio.png' || entry.imageThumb}}">
+        <h2> {{entry.title}}</h2><weather-icon icon="entry.weather"></weather-icon>
+        <h3>{{entry.timeStamp | date: "MMM dd, yyyy h:mma" }}</h3>
+        <h4> {{entry.description}}</h4>
+        <h4>{{entry.location}}</h4>
+
+      </ion-item>
+
+
+    </ion-list>
+
+  </ion-content>
+</ion-view>

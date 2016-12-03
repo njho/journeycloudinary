@@ -1,0 +1,62 @@
+<ion-view class="settings-view">
+
+  <ion-nav-title>
+    <span>Submit</span>
+  </ion-nav-title>
+  <ion-content>
+
+
+    <ul class="list">
+      <div>
+        <div class="box">
+          <span class="caption simplecaption" style="padding-top: 0px;"><weather-icon icon="current.currently.icon"></weather-icon><br>
+          {{current.currently.temperature | number: 0}} °C
+          </span>
+          <video class="submit" width="100%" ng-if="mimeType === 'video/mp4'" autoplay controls>
+            <source ng-src="{{url}}" type="video/mp4">
+          </video>
+          <audio ng-if="mimeType === 'audio/mp4'" autoplay loop controls>
+            <source ng-src="{{url}}" type="audio/mp4">
+            Your browser does not support the audio element.
+          </audio>
+          <img class="submit" ng-src="{{url}}" ng-if="mimeType === 'image/jpeg'">
+        </div>
+        <!--<div class="submitWeather item-icon-right">
+          <i ng-class="{'icon ion-android-sunny' : current.icon == 'clear-day', 'icon ion-ios-moon-outline': current.icon == 'clear-night'}"
+            ng-click="liked!=liked"></i>
+        </div>
+      </div>
+
+
+      <div class="submitWeather item-icon-right">
+        <i
+          ng-class="{'icon ion-android-sunny' : current.icon == 'clear-day', 'icon ion-ios-moon-outline': current.icon == 'clear-night'}"
+          ng-click="liked!=liked"></i>-->
+      </div>
+
+
+      <div class="item item-divider">
+        Current Location: {{lat}}, {{lon}}
+      </div>
+      <label class="item item-input ">
+        <input type="text" class="journey-title" ng-model="journey.title" placeholder="Enter a Title">
+      </label>
+
+
+      <label class="item item-input">
+        <textarea ng-model="journey.description"
+                  placeholder="Please enter a description for this experience"></textarea>
+      </label>
+
+      <button ng-click="update(parentKey)" class="button button-block button-assertive">
+        Submit
+      </button>
+
+
+
+
+
+
+    </ul>
+  </ion-content>
+</ion-view>

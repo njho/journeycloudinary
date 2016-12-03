@@ -53,17 +53,14 @@ angular.module('journey.controllers', ['journey.services'])
         console.log('Logged in via button with: ' + $localStorage.storageAuth.token);
         $state.go('tab.feed');
       } else {
-        Auth.$authWithOAuthPopup('facebook').then(function (authData) {
+        Auth.$authWithOAuthPopup('facebook', [{remember: "none"}]).then(function (authData) {
           //Save user data into User Service
           if (authData && !User.isNewUser(authData.uid)) {
             User.createUser(authData);
           }
           User.setUser(authData);
           $localStorage.storageAuth = User.profile;
-
           console.log('success!', authData, 'local Storage: ', $localStorage.storageAuth, 'User information: ', User.profile);
-
-
           $state.go('tab.feed');
 
         }).catch(function (error) {
@@ -95,8 +92,8 @@ angular.module('journey.controllers', ['journey.services'])
         var i, path, len;
         for (i = 0, len = mediaFiles.length; i < len; i += 1) {
           path = mediaFiles[i].fullPath;
-          path = path.replace("file:", "");
-          /*path = path.replace("file:/", "file:///");*/
+          /*path = path.replace("file:", "");*/
+          path = path.replace("file:/", "file:///");
           console.log(' this is the returned path: ' + path);
           captureService.mimeType = 'video/mp4';
           captureService.url = path;
@@ -143,7 +140,7 @@ angular.module('journey.controllers', ['journey.services'])
         navigator.camera.getPicture(function cameraSuccess(imageUri) {
           console.log(imageUri);
           captureService.url = imageUri;
-          captureService.mimeType = 'image/jpg';
+          captureService.mimeType = 'image/jpeg';
           $state.go('tab.submit');
         }, function cameraError(error) {
           console.debug("Unable to obtain picture: " + error, "app");
@@ -275,7 +272,6 @@ angular.module('journey.controllers', ['journey.services'])
 
   .controller('continuousCtrl', ['$scope', 'captureService', 'experiencesService', 'Amazon', 'User', '$state', 'FirebaseUrl', '$timeout', '$cordovaGeolocation', 'weatherApi', '$firebaseArray', '$rootScope', 'fireLoader', 'amaLoader', '$localStorage', '$ionicPlatform', '$interval', '$ionicLoading', function ($scope, captureService, experiencesService, Amazon, User, $state, FirebaseUrl, $timeout, $cordovaGeolocation, weatherApi, $firebaseArray, $rootScope, fireLoader, amaLoader, $localStorage, $ionicPlatform, $interval, $ionicLoading) {
 
-
     $ionicPlatform.ready(function () {
 
 
@@ -289,17 +285,18 @@ angular.module('journey.controllers', ['journey.services'])
         $scope.experiences = $firebaseArray(indexRef);
       } else {
         $scope.offlineExp = $localStorage.experiences;
-      };
+      }
+      ;
 
       $scope.likes = 2;
       $scope.timeStamp = new Date();
-      $scope.timeStamp = Math.round($scope.timeStamp.getTime()/1000);
+      $scope.timeStamp = Math.round($scope.timeStamp.getTime() / 1000);
       console.log('this is the time Stamp: ' + $scope.timeStamp);
       $scope.journey = {};
       $scope.journey.title = '';
       $scope.journey.description = '';
       var url = '';
-      var mimeType = 'image/jpeg';
+      var mimeType = "image/jpeg";
       $scope.key = '';
 
       $scope.interval = {};
@@ -358,8 +355,10 @@ angular.module('journey.controllers', ['journey.services'])
           likes: $scope.likes,
           weather: $scope.current.currently.icon,
           temp: $scope.current.currently.temperature,
-          mimeType: 'image/jpeg',
-          live: true
+          mimeType: "image/jpeg",
+          live: true,
+          type: 'update',
+          filename: filename
         };
 
         if ($rootScope.offline.value === true) {
@@ -376,18 +375,20 @@ angular.module('journey.controllers', ['journey.services'])
 
           var amazonParams = Amazon.upload(imageUrl, mimeType, User.profile.lid, parentKey);
           console.log(amazonParams);
-          amaLoader.upload(imageUrl, amazonParams.Uoptions, $scope.title);
+          //new provision for new upload V1.0
+          amaLoader.upload(imageUrl, amazonParams.Uoptions, info, User.profile.lid, parentKey);
         }
 
       };
 
-      var successCall = function(imageUrl) {
+      var successCall = function (imageUrl) {
         console.log('imageURL: ' + imageUrl);
 
         //May require for Image Url
         /*path = path.replace("file:", "")*/
         var filename = encodeURI(imageUrl.replace(/^.*[\\\/]/, ''));
-
+        var concat = "file:///"
+        imageUrl = concat.concat(imageUrl);
         update($scope.key, filename, imageUrl);
 
       };
@@ -402,14 +403,14 @@ angular.module('journey.controllers', ['journey.services'])
 
       $scope.broadcast = function (key) {
         cordova.plugins.backgroundMode.enable();
-        window.powerManagement.dim(function() {
+        window.powerManagement.dim(function () {
           console.log('Wakelock acquired');
-        }, function() {
+        }, function () {
           console.log('Failed to acquire wakelock');
         });
-        window.powerManagement.setReleaseOnPause(false, function() {
+        window.powerManagement.setReleaseOnPause(false, function () {
           console.log('Set successfully');
-        }, function() {
+        }, function () {
           console.log('Failed to set');
         });
         console.log('shots fired');
@@ -437,19 +438,21 @@ angular.module('journey.controllers', ['journey.services'])
             if ($rootScope.offline.value === false) {
               $scope.current = resp.data;
               console.log($scope.current);
-            };
+            }
+            ;
 
             $scope.timeStamp = new Date();
-            $scope.timeStamp = Math.round($scope.timeStamp.getTime()/1000);
+            $scope.timeStamp = Math.round($scope.timeStamp.getTime() / 1000);
             console.log('this is the time Stamp: ' + $scope.timeStamp);
-                        //Fire Camera
+            //Fire Camera
             camera();
 
           }, function (err) {
             console.log(err);
           });
 
-         }, 15000);
+
+        }, 20000);
 
         //$scope.interval.int*60000
       }
@@ -459,9 +462,6 @@ angular.module('journey.controllers', ['journey.services'])
       console.log($scope.options);
       console.log($scope.interval);
     }
-
-
-
 
 
   }])
@@ -474,7 +474,7 @@ angular.module('journey.controllers', ['journey.services'])
     $scope.lon = "";
     $scope.likes = 2;
     $scope.timeStamp = new Date();
-    $scope.timeStamp = Math.round($scope.timeStamp.getTime()/1000);
+    $scope.timeStamp = Math.round($scope.timeStamp.getTime() / 1000);
     console.log('this is the timestamp: ');
     console.log($scope.timeStamp);
 
@@ -518,7 +518,7 @@ angular.module('journey.controllers', ['journey.services'])
     $scope.journey = {};
     $scope.journey.title = '';
     $scope.journey.description = '';
-    var filename = encodeURI($scope.url.replace(/^.*[\\\/]/, ''));
+    var filename = encodeURI($scope.url.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, ""));
 
     if ($rootScope.offline.value === false) {
       $scope.experiences = {};
@@ -585,7 +585,9 @@ angular.module('journey.controllers', ['journey.services'])
         weather: $scope.current.currently.icon,
         temp: $scope.current.currently.temperature,
         mimeType: $scope.mimeType,
-        live: false
+        live: false,
+        type: 'update',
+        filename: filename
       };
 
       if ($rootScope.offline.value === true) {
@@ -600,8 +602,10 @@ angular.module('journey.controllers', ['journey.services'])
         fireLoader.upload(info, parentKey, filename);
 
         var amazonParams = Amazon.upload($scope.url, $scope.mimeType, User.profile.lid, parentKey);
+        //May not be required anymore
         console.log(amazonParams);
-        amaLoader.upload($scope.url, amazonParams.Uoptions, $scope.title);
+        //new provision for new upload V1.0
+        amaLoader.upload($scope.url, amazonParams.Uoptions, info, User.profile.lid, parentKey);
       }
 
     };
@@ -611,6 +615,7 @@ angular.module('journey.controllers', ['journey.services'])
         title: $scope.journey.title,
         description: $scope.journey.description,
         timeStamp: $scope.timeStamp,
+        //This isn't actually carried through to anywhere. Should actually be removed
         imageUrl: $scope.url,
         lat: $scope.lat,
         lon: $scope.lon,
@@ -620,7 +625,9 @@ angular.module('journey.controllers', ['journey.services'])
         weather: $scope.current.currently.icon,
         temp: $scope.current.currently.temperature,
         mimeType: $scope.mimeType,
-        live: false
+        live: false,
+        type: 'new',
+        filename: filename
       };
 
       if ($rootScope.offline.value === true) {
@@ -658,7 +665,7 @@ angular.module('journey.controllers', ['journey.services'])
         var amazonParams = Amazon.upload($scope.url, $scope.mimeType, User.profile.lid, newJourneyKey);
         console.log(amazonParams);
         //url, parameters, title
-        amaLoader.upload($scope.url, amazonParams.Uoptions, $scope.title);
+        amaLoader.upload($scope.url, amazonParams.Uoptions, info, User.profile.lid, newJourneyKey);
 
       }
 
@@ -670,7 +677,7 @@ angular.module('journey.controllers', ['journey.services'])
   .controller('PlaylistCtrl', function ($scope, $stateParams) {
   })
 
-  .controller('TabsCtrl', function ($scope, $ionicSideMenuDelegate, User, $state, $localStorage, $rootScope, $timeout) {
+  .controller('TabsCtrl', function ($scope, $ionicSideMenuDelegate, User, $state, $localStorage, $rootScope, $timeout, Auth, $ionicHistory, $cordovaInAppBrowser) {
 
     $scope.displayName = $localStorage.storageAuth.displayName;
     $scope.profileUrl = $localStorage.storageAuth.profileUrl;
@@ -678,14 +685,32 @@ angular.module('journey.controllers', ['journey.services'])
       $timeout(function () {
         $localStorage.offline = $rootScope.offline.value;
         console.log("Offline Mode is set to: (localstorage & rtscope) " + $localStorage.offline + $rootScope.offline.value);
+        $ionicHistory.clearHistory();
+        $ionicHistory.clearCache();
       })
     };
 
     $scope.logout = function () {
+      var options = {
+        location: 'yes',
+        clearcache: 'yes',
+        toolbar: 'no',
+        hidden: 'yes'
+      };
+
+      // _blank loads in background, might need clearsessioncache
+      $rootScope.$on('$cordovaInAppBrowser:loadstop', function (e, event) {
+        $cordovaInAppBrowser.close();
+      });
+      $cordovaInAppBrowser.open('http://www.google.com', '_blank', options);
+
+
       console.log($localStorage.storageAuth);
       delete $localStorage.storageAuth;
       console.log('logout fired!');
       console.log($localStorage.storageAuth);
+      Auth.$unauth();
+
       $state.go('user.signin');
     };
 
@@ -761,6 +786,10 @@ angular.module('journey.controllers', ['journey.services'])
 
     $scope.lat = $scope.entries[0].lat;
     $scope.lon = $scope.entries[0].lon;
+    $scope.date = $scope.entries[0].timeStamp;
+    $scope.live = $scope.entries[0].live;
+    $scope.contrib = $scope.entries[0].user;
+    $scope.contribImg = $scope.entries[0].userImg;
 
     console.log(entries);
 
@@ -816,9 +845,16 @@ angular.module('journey.controllers', ['journey.services'])
           if ($scope.slider.activeIndex === resultsLength + 1) {
             $scope.lat = $scope.entries[0].lat
             $scope.lon = $scope.entries[0].lon;
+            $scope.date = $scope.entries[0].timeStamp;
+            $scope.live = $scope.entries[0].live;
+            $scope.contrib = $scope.entries[0].user;
+            $scope.contribImg = $scope.entries[0].userImg;
           } else {
             $scope.lat = $scope.entries[$scope.slider.activeIndex].lat
             $scope.lon = $scope.entries[$scope.slider.activeIndex].lon;
+            $scope.date = $scope.entries[$scope.slider.activeIndex].timeStamp;
+            $scope.contrib = $scope.entries[$scope.slider.activeIndex].user;
+            $scope.contribImg = $scope.entries[$scope.slider.activeIndex].userImg;
           }
         });
       });
@@ -852,9 +888,16 @@ angular.module('journey.controllers', ['journey.services'])
           if ($scope.slider.activeIndex === 0) {
             $scope.lat = $scope.entries[0].lat
             $scope.lon = $scope.entries[0].lon;
+            $scope.date = $scope.entries[0].timeStamp;
+            $scope.contrib = $scope.entries[0].user;
+            $scope.contribImg = $scope.entries[0].userImg;
           } else {
             $scope.lat = $scope.entries[$scope.slider.activeIndex].lat
             $scope.lon = $scope.entries[$scope.slider.activeIndex].lon;
+            $scope.date = $scope.entries[$scope.slider.activeIndex].timeStamp;
+            $scope.contrib = $scope.entries[$scope.slider.activeIndex].user;
+            $scope.contribImg = $scope.entries[$scope.slider.activeIndex].userImg;
+
           }
         })
       });
@@ -893,7 +936,7 @@ angular.module('journey.controllers', ['journey.services'])
     $scope.slidebind = null;
 
     $scope.showImages = function () {
-      $scope.activeSlide = $scope.slider.activeIndex - 1;
+      $scope.activeSlide = $scope.slider.activeIndex;
       $scope.showModal('templates/gallery-zoomview.html');
 
     };
@@ -908,7 +951,7 @@ angular.module('journey.controllers', ['journey.services'])
     };
 
     $scope.closeModal = function (activeSlide) {
-      $scope.slider.slideTo(activeSlide + 1, {runCallbacks: false})
+      $scope.slider.slideTo(activeSlide, {runCallbacks: false})
       $scope.modal.hide();
       $scope.modal.remove();
     };
@@ -994,18 +1037,313 @@ angular.module('journey.controllers', ['journey.services'])
 
   })
 
-  .controller('contributeCtrl', function ($scope, userFire, $rootScope) {
+  .controller('contributeCtrl', function ($scope, userFire, $rootScope, contribService, $state, $timeout) {
     $scope.searchText = null;
-    if ($rootScope.offline.value === true) {
+    $scope.change = false;
+
+    $scope.change = null;
+    if ($rootScope.offline.value === false) {
       $scope.users = userFire;
     }
     ;
+    $scope.userContrib = function (contribId) {
+      $state.go('tab.contrib', {userId: contribId});
+    };
+
 
   })
+
+  .controller('contribSelect', function ($scope, $state, contribExperiences, $stateParams) {
+    $scope.experiences = contribExperiences;
+    $scope.userId = $stateParams.userId;
+
+  })
+
+  .controller('contribCapture', ['$scope', '$ionicPlatform', '$interval', 'manualCaptureService', 'geolocationService', '$cordovaFileTransfer', 'Amazon', '$ionicLoading', '$state', 'captureService', '$stateParams', function ($scope, $ionicPlatform, $interval, manualCaptureService, geolocationService, $cordovaFileTransfer, Amazon, $ionicLoading, $state, captureService, $stateParams) {
+
+    $ionicPlatform.ready(function () {
+      captureService.key = $stateParams.key;
+      $scope.captureMode = false;
+      var videoSuccess = function (mediaFiles) {
+        var i, path, len;
+        for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+          path = mediaFiles[i].fullPath;
+          /*path = path.replace("file:", "");*/
+          path = path.replace("file:/", "file:///");
+          console.log(' this is the returned path: ' + path);
+          captureService.mimeType = 'video/mp4';
+          captureService.url = path;
+          $state.go('tab.contribSubmit')
+        }
+      };
+
+      var audioSuccess = function (mediaFiles) {
+        var i, path, len;
+        for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+          var audioPath = mediaFiles[i].fullPath;
+          audioPath = audioPath.replace("%:", "/");
+          /*path = path.replace("file:/", "file:///");*/
+          console.log(' this is the returned path: ' + audioPath);
+          captureService.mimeType = 'audio/mp4';
+          /*          captureServiscope.urlce.url = path.replace('%', "/");*/
+          captureService.url = audioPath;
+          console.log('this is the new returned path' + captureService.url)
+          $state.go('tab.contribSubmit');
+        }
+      };
+
+      var captureError = function (error) {
+        console.debug("Unable to capture: " + error, "app");
+      };
+
+      // capture error callback
+      var captureError = function (error) {
+        navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+      };
+
+      $scope.cameraCapture = function () {
+        var options = {
+          quality: 50,
+          destinationType: Camera.DestinationType.FILE_URI,
+          sourceType: Camera.PictureSourceType.CAMERA,
+          allowEdit: false,
+          encodingType: Camera.EncodingType.JPEG,
+          correctOrientation: true,
+          popoverOptions: CameraPopoverOptions,
+          saveToPhotoAlbum: true
+        };
+
+        navigator.camera.getPicture(function cameraSuccess(imageUri) {
+          console.log(imageUri);
+          captureService.url = imageUri;
+          captureService.mimeType = 'image/jpeg';
+          $state.go('tab.contribSubmit');
+        }, function cameraError(error) {
+          console.debug("Unable to obtain picture: " + error, "app");
+        }, options);
+      };
+
+      $scope.audioCapture = function () {
+        navigator.device.capture.captureAudio(audioSuccess, captureError, {duration: 1});
+      };
+
+      $scope.videoCapture = function () {
+        navigator.device.capture.captureVideo(videoSuccess, captureError, {duration: 5});
+      };
+    });
+
+  }])
+
+  .controller('contribSubmitCtrl', ['$scope', 'captureService', 'experiencesService', 'Amazon', 'User', '$state', 'FirebaseUrl', '$timeout', '$cordovaGeolocation', 'weatherApi', '$firebaseArray', '$rootScope', 'fireLoader', 'amaLoader', '$localStorage', function ($scope, captureService, experiencesService, Amazon, User, $state, FirebaseUrl, $timeout, $cordovaGeolocation, weatherApi, $firebaseArray, $rootScope, fireLoader, amaLoader, $localStorage) {
+
+    $scope.profile = 'facebook:10154035067882095';
+    $scope.parentKey = captureService.key;
+    $scope.lat = "";
+    $scope.lon = "";
+    $scope.likes = 2;
+    $scope.timeStamp = new Date();
+    $scope.timeStamp = Math.round($scope.timeStamp.getTime() / 1000);
+    console.log('this is the timestamp: ');
+    console.log($scope.timeStamp);
+
+    var posOptions = {timeout: 5000, enableHighAccuracy: true};
+
+    $cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
+      $scope.lat = position.coords.latitude;
+      $scope.lon = position.coords.longitude;
+      $scope.current = {};
+      $scope.current.currently = {};
+      $scope.current.currently.icon = '';
+      $scope.current.currently.temperature = '';
+
+      if ($rootScope.offline.value === false) {
+        return weatherApi.getCurrentWeather($scope.lat, $scope.lon);
+      }
+
+    }, function (err) {
+      console.log(err);
+      // error
+    }).then(function (resp) {
+      $scope.current = resp.data;
+      console.log($scope.current);
+    }, function (err) {
+      console.log(err);
+    });
+
+    $scope.mimeType = captureService.mimeType;
+    $scope.url = captureService.url;
+
+    $scope.journey = {};
+    $scope.journey.title = '';
+    $scope.journey.description = '';
+    var filename = encodeURI($scope.url.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, ""));
+
+    if ($rootScope.offline.value === false) {
+      $scope.experiences = {};
+      var journeyFireRef = new Firebase(FirebaseUrl + 'journeyfire');
+
+      var indexRef = new Firebase(FirebaseUrl + 'user_meta/').child($scope.profile);
+
+      $scope.experiences = $firebaseArray(indexRef);
+    } else {
+      //Insert offline else statements here.
+    }
+
+    $scope.update = function (parentKey) {
+      var info = {
+        title: $scope.journey.title,
+        description: $scope.journey.description,
+        timeStamp: $scope.timeStamp,
+        lat: $scope.lat,
+        lon: $scope.lon,
+        imageUrl: $scope.url,
+        user: User.profile.displayName,
+        userImg: User.profile.profileUrl,
+        likes: $scope.likes,
+        weather: $scope.current.currently.icon,
+        temp: $scope.current.currently.temperature,
+        mimeType: $scope.mimeType,
+        live: false,
+        type: 'update',
+        filename: filename,
+        contribUser: User.profile.displayName,
+        contribUserImg: User.profile.profileUrl
+      };
+
+      if ($rootScope.offline.value === true) {
+        var timeStamp = parentKey;
+        $localStorage[timeStamp].push(info);
+        console.log($localStorage[timeStamp])
+        $state.go('tab.journey');
+
+      } else {
+        var parentKey = parentKey;
+
+        fireLoader.upload(info, parentKey, filename);
+
+        var amazonParams = Amazon.upload($scope.url, $scope.mimeType, User.profile.lid, parentKey);
+        //May not be required anymore
+        console.log(amazonParams);
+        //new provision for new upload V1.0
+        amaLoader.upload($scope.url, amazonParams.Uoptions, info, User.profile.lid, parentKey);
+      }
+
+    };
+
+  }])
 
   .controller('photolistCtrl', function () {
 
   })
+
+  .controller('settingsCtrl', ['$scope', '$rootScope', '$localStorage', 'fireLoader', 'amaLoader', 'FirebaseUrl', 'Amazon', 'User', '$cordovaFileTransfer', '$ionicLoading', 'weatherApi', '$ionicHistory', '$timeout', function ($scope, $rootScope, $localStorage, fireLoader, amaLoader, FirebaseUrl, Amazon, User, $cordovaFileTransfer, $ionicLoading, weatherApi, $ionicHistory, $timeout) {
+    $scope.connectToggle = function () {
+      $timeout(function () {
+        $localStorage.offline = $rootScope.offline.value;
+        console.log("Offline Mode is set to: (localstorage & rtscope) " + $localStorage.offline + $rootScope.offline.value);
+        $ionicHistory.clearHistory();
+        $ionicHistory.clearCache();
+      })
+    };
+    $scope.offlineExp = $localStorage.experiences;
+
+    $scope.bulkLoad = function (id) {
+      console.log('This is the collection ID/TimeStamp: ' + id);
+
+      var titleInfo = $localStorage.experiences[id];
+      var filename = encodeURI($localStorage.experiences[id].imageUrl.replace(/^.*[\\\/]/, ''));
+
+      console.log('This it the title page information: ' + titleInfo);
+      console.log($localStorage.experiences[id]);
+
+      //This is all for the title uploading copied from submitCtrl
+      var info1 = $localStorage.experiences[id];
+      var ref = new Firebase(FirebaseUrl);
+      var newJourneyRef = ref.child("journeyfire").push();
+      var newJourneyKey = newJourneyRef.key();
+      var amazonParams = Amazon.upload($localStorage.experiences[id].imageUrl, $localStorage.experiences[id].mimeType, User.profile.lid, newJourneyKey);
+
+      var pastWeather1 = function () {
+        return weatherApi.getPastWeather(info1.lat, info1.lon, info1.timeStamp);
+      }
+
+      pastWeather1().then(function (resp) {
+        console.log(resp);
+        info1.weather = resp.data.currently.icon;
+        info1.temp = resp.data.currently.temperature;
+        console.log('this is info1: ' + info1);
+        fireLoader.uploadNew(info1, newJourneyRef, newJourneyKey, filename);
+
+        return $cordovaFileTransfer.upload("https://journeyapp.s3.amazonaws.com/", $localStorage.experiences[id].imageUrl, amazonParams.Uoptions, $localStorage.experiences[id].title);
+
+
+      }).then(function (result) {
+        // Success!
+        // Let the user know the upload is completed
+        $ionicLoading.show({template: 'Upload Success!', duration: 3000});
+        console.log('upload to s3 succeed ', result);
+
+      }, function (err) {
+        // Error
+        // Uh oh!
+        $ionicLoading.show({template: 'Upload Failed', duration: 3000});
+        console.log('upload to s3 fail ', err);
+      }, function (progress) {
+
+        // constant progress updates
+      });
+
+
+      //2 This is the crazy loop, who knows what will happen
+
+      var entries = $localStorage[id];
+      //redundant shitty code.
+      var parentKey = newJourneyKey;
+
+      function updateEntries(entries, i) {
+        if (i < entries.length) {
+
+          var info2 = entries[i];
+          var filename2 = encodeURI(entries[i].imageUrl.replace(/^.*[\\\/]/, ''));
+          var url2 = entries[i].imageUrl;
+          var amazonParams2 = Amazon.upload(url2, entries[i].mimeType, User.profile.lid, parentKey);
+          console.log(amazonParams);
+
+          var pastWeather2 = function () {
+            return weatherApi.getPastWeather(info2.lat, info2.lon, info2.timeStamp);
+          }
+
+          pastWeather1().then(function (resp) {
+            console.log(resp);
+            info2.weather = resp.data.currently.icon;
+            info2.temp = resp.data.currently.temperature;
+            console.log('this is info2: ' + info2);
+            fireLoader.upload(info2, parentKey, filename2)
+
+            return $cordovaFileTransfer.upload("https://journeyapp.s3.amazonaws.com/", url2, amazonParams2.Uoptions, entries[i].title)
+
+          }).then(function (result) {
+            // Success!
+            // Let the user know the upload is completed
+            $ionicLoading.show({template: 'Upload Success!' + i, duration: 3000});
+            console.log('upload to s3 succeed ' + i, result);
+            return updateEntries(entries, i + 1);
+
+          }, function (err) {
+            // Error
+            // Uh oh!
+            $ionicLoading.show({template: 'Upload Failed', duration: 3000});
+            console.log('upload to s3 fail ', err);
+          }, function (progress) {
+
+            // constant progress updates
+          });
+        }
+      }
+
+      updateEntries(entries, 0);
+    }
+  }])
 
 
 ;
