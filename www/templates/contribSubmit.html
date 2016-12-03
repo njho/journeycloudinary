@@ -9,8 +9,7 @@
     <ul class="list">
       <div>
         <div class="box">
-          <span class="caption simplecaption" style="padding-top: 0px;">
-            <weather-icon icon="current.currently.icon"></weather-icon><br>
+          <span class="caption simplecaption" style="padding-top: 0px;"><weather-icon icon="current.currently.icon"></weather-icon><br>
           {{current.currently.temperature | number: 0}} °C
           </span>
           <video class="submit" width="100%" ng-if="mimeType === 'video/mp4'" autoplay controls>
@@ -49,46 +48,11 @@
                   placeholder="Please enter a description for this experience"></textarea>
       </label>
 
-      <div ng-show="!new" class="item item-divider">
-        <i class="ion-images"></i>
-        Choose A Journey
-      </div>
-
-      <button ng-show="new" ng-click="uploadNew()" class="button button-block button-assertive">
+      <button ng-click="update(parentKey)" class="button button-block button-assertive">
         Submit
       </button>
 
-      <div ng-click="toggle()" ng-show="new" class="item item-divider">
-        <i class="ion-images"></i>
-        Or choose from an existing Journey
-      </div>
-      <a class="item item-list-detail" ng-show="!new">
-        <ion-scroll direction="x">
-          <li class="journeypicker">
-            <img ng-src="img/add-new.png" ng-click="toggle()" class="image-list-thumb"/>
-            </br>
-            <span align="center"><h2>Add New</h2></span>
-          </li>
-          <!-- Only hard coded... Remove later-->
 
-          <li class="journeypicker" ng-repeat="entry in picker">
-            <img ng-src="{{entry.image}}" ng-click="" class="image-list-thumb"/>
-            </br>
-            <span align="center"><h2>{{entry.name}}</h2></span>
-          </li>
-
-          <li class="journeypicker" ng-repeat="entry in experiences">
-            <img ng-src="{{entry.imageUrl}}" ng-click="update(entry.key)" class="image-list-thumb"/>
-            </br>
-            <span align="center"><h2>{{entry.title}}</h2></span>
-          </li>
-          <li class="journeypicker" ng-repeat="entry in offline">
-            <img ng-src="{{entry.imageUrl}}" ng-click="update(entry.timeStamp)" class="image-list-thumb"/>
-            </br>
-            <span align="center"><h2>OffL: {{entry.title}}</h2></span>
-          </li>
-        </ion-scroll>
-      </a>
 
 
 

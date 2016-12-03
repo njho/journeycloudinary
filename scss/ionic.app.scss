@@ -45,6 +45,16 @@ $energized: #5CA4A9 !default;
 }
 
 //submit html
+
+.fixed-outside{
+  position: absolute;
+  bottom: 0;
+  color:white;
+  width: 100%;
+  height:  80px;
+  text-align:center;
+}
+
 .journeypicker {
   display: inline-block;
 }
@@ -64,9 +74,9 @@ $energized: #5CA4A9 !default;
 
 
 .box {
-  border: 5px solid #fff;
+  /*border: 5px solid #fff;*/
   height: auto;
-  margin: 5px;
+  /*margin: 5px;*/
   padding-right: 10px;
   clear: right;
   position: relative;
@@ -265,21 +275,40 @@ map {
 
 //BELOW IS FOR EXPERIENCE DESCRIPTION IN EXPERIENCE.HTML
 .experienceDescription{
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
   display: flex;
   align-items: center;
   position: absolute;
+  bottom: 0px;
   background-color: black;
-  opacity: 0.75;
+  opacity: 0.80;
   width: 100%;
   color: white;
   z-index: 100;
   min-height: 50px;
+  border-radius: 5px 5px 0px 0px;
+  justify-content: space-between;
+}
+
+.experienceDescriptionTwo{
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 9px;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  background-color: black;
+  opacity: 0.85;
+  width: 100%;
+  color: white;
+  z-index: 100;
+  min-height: 15px;
   border-radius: 0px 0px 5px 5px;
   justify-content: space-between;
 }
+
 
 
 .descriptionContainer {
@@ -289,13 +318,18 @@ map {
 
 //weather in experience.html
 .weatherContainer {
-  float: right !important;
+  /*float: right !important;*/
   display: flex;
   align-items: center;
 
   span {
     display: inline !important;
   }
+}
+
+.alignCenter {
+  display: flex;
+  align-items: center;
 }
 
 
@@ -589,6 +623,10 @@ $animate2: 'fadeInDown';
   @include animate(fadeInUp, 1s, 1s);
 }
 
+.step4{
+  @include animate(bounceInDown, 1.2s, 0.5s);
+}
+
 
 //Beginning of User
 
@@ -634,10 +672,24 @@ $time: 0.5s;
   }
 }
 
+.signinlogo{
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  max-width: 340px;
+  margin-top: 45%;
+}
+
 .view-login {
 
   .scroll-content {
     padding: 0;
+    background: url('../img/bg2.png') no-repeat center;
+    background-size: cover;
+    position: absolute;
+    magin-left: auto;
+    magin-right: auto;
   }
 
   .scroll {
@@ -645,29 +697,27 @@ $time: 0.5s;
     background-color: #fff;
   }
 
+
+
   .user-head {
     background-color: $positive;
     background-position: 50%;
-    background: url('../img/bg.jpg');
+    background: url('../img/.jpg');
     background-size: cover;
     position: relative;
     height: 400px;
 
-    .logo2 {
+  /*  .logo2 {
       position: relative;
       display: block;
       margin: 20px auto;
-      width: 250px;
+      width: 400px;
 
       img {
         width: 180px;
       }
-      .signinlogo{
-        position: relative;
-        top: -50px;
 
-      }
-/*
+!*
       span.icon2-logo {
         font-size: 45pt;
         color: #fff;
@@ -677,8 +727,8 @@ $time: 0.5s;
         top: 0px;
         left: 20%;
       }
-      */
-    }
+      *!
+    }*/
 
     h2 {
       color: #fff;
@@ -778,21 +828,60 @@ $time: 0.5s;
     }
   }}
 
+
 .button-facebook {
   background: none repeat scroll 0 0 #3f569b !important;
   border: 1px solid darken(#3f569b, 20);
   color: #fff !important;
   position: relative;
+  bottom: 0px;
   width: 100%;
+
   //border-radius : 50px;
   i {
     border-right: 1px solid rgba(255, 255, 255, 0.3);
-    left: 20px;
-    padding-right: 10px;
+    left: 15px;
+    padding-right: 15px;
     position: absolute;
     width: 30px;
   }
 }
+
+.scroll-content .scroll, .bookmarks-container {
+  height: 100%; }
+.empty-results {
+  text-align: center; }
+.empty-results .icon {
+  font-size: 170px;
+  color: #d1d1d1; }
+.empty-results .no-bookmarks {
+  color: #d1d1d1;
+  font-size: 22px; }
+.bookmarks-view .bookmarks-list {
+  overflow-y: scroll;
+  height: 100%; }
+.bookmarks-view .bookmarks-list::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important; }
+.bookmarks-view .bookmark-item {
+  padding: 10px 0px;
+  border-bottom: 1px solid rgba(30, 30, 30, 0.2);
+  margin: 0px 16px; }
+.bookmarks-view .bookmark-item * {
+  text-decoration: none;
+  color: #444444; }
+.bookmarks-view .bookmark-item .post-title {
+  margin: 0px;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: -1px; }
+.bookmarks-view .bookmark-item .post-date {
+  margin: 0px;
+  font-size: 12px;
+  font-weight: 200;
+  color: rgba(94, 94, 94, 0.7); }
+.bookmarks-view .bookmark-item .post-time {
+  color: rgba(43, 43, 43, 0.9); }
 
 
 

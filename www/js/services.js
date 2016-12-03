@@ -7,10 +7,24 @@ angular.module('journey.services', ['ngResource'])
 
   })
 
+  .factory('contribService', function() {
+    var o = {};
+    o.contribId = '';
+    o.setContrib = function(id) {
+      o.contribId = id;
+      console.log('this is the contribId');
+      console.log('this is the contribId' + o.contribId);
+      console.log(o.contribId);
+    }
+
+    return o;
+  })
+
   .factory('captureService', function ($rootScope) {
     var o = {};
     o.url = "";
     o.mimeType = '';
+    o.key = '';
     return o;
   })
 
@@ -449,7 +463,7 @@ angular.module('journey.services', ['ngResource'])
       var root;
 
       switch (info.mimeType) {
-        case 'image/jpg':
+        case 'image/jpeg':
           extension = '.jpg';
           root = "https://res.cloudinary.com/dem9ilv6g/image/upload/";
           break;
@@ -514,7 +528,7 @@ angular.module('journey.services', ['ngResource'])
 
 
       switch (info.mimeType) {
-        case 'image/jpg':
+        case 'image/jpeg':
           extension = '.jpg';
           root = "https://res.cloudinary.com/dem9ilv6g/image/upload/";
           thumbRoot = "https://res.cloudinary.com/dem9ilv6g/image/upload/c_thumb,h_150,w_150/";
@@ -630,15 +644,16 @@ angular.module('journey.services', ['ngResource'])
           resourceType = 'video';
           console.log('video');
           break;
-        case 'image/jpg':
+        case 'image/jpeg':
           resourceType = 'auto';
           console.log('image');
           break;
       };
 
       console.log(url);
+      console.log(info);
 
-      if (info.mimeType === 'audio/mp4') {
+      if (info.mimeType === "audio/mp4") {
         var url = url;
         var params = params;
 
@@ -668,6 +683,7 @@ angular.module('journey.services', ['ngResource'])
         var percentage;
         // Find out how big the original file is
         window.resolveLocalFileSystemURL(url, function (fileEntry) {
+          console.log('from inside uploader');
           console.log(url);
           fileEntry.file(function (fileObj) {
 
@@ -719,8 +735,7 @@ angular.module('journey.services', ['ngResource'])
         }
 
         return deferred.promise;
-      }
-      ;
+      };
 
     };
 

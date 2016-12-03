@@ -16,9 +16,8 @@ navigation history that also transitions its views in and out.
 
     <ion-tabs class="tabs-icon-top tabs-color-active-positive">
 
-
       <!-- Feed Tab -->
-      <ion-tab title="Feed" icon-off="ion-ios-home-outline" icon-on="ion-ios-home" href="#/tab/playlists">
+      <ion-tab title="Feed" icon-off="ion-ios-home-outline" icon-on="ion-ios-home" href="#/tab/playlists" ui-sref="tab.feed">
         <!--TODO unfuck up the ion-nav-view names -->
         <ion-nav-view name="tab-feed"></ion-nav-view>
       </ion-tab>
@@ -37,6 +36,10 @@ navigation history that also transitions its views in and out.
       <!-- Experiences Tab -->
       <ion-tab title="Experiences" icon-off="ion-ios-location-outline" icon-on="ion-ios-location" href="#/tab/experiences" badge="favCount()" badge-style="badge-assertive"  on-select="enteringFavorites()" on-deselect="leavingFavorites()">
         <ion-nav-view name="tab-experiences"></ion-nav-view>
+      </ion-tab>
+
+      <ion-tab title="Settings" hidden="true" href="#/tab/settings">
+        <ion-nav-view name="tab-settings"></ion-nav-view>
       </ion-tab>
 
 
@@ -60,23 +63,15 @@ navigation history that also transitions its views in and out.
           <p class="message">Where will your next journey take you?</p>
         </ion-item>
 
-        <ion-item class = "item-icon-left" nav-clear menu-close ui-sref="tab.bulkLoader">
-          <i class="icon ion-ios-home-outline"></i>
-          <h2 class="menu-text">bulkLoader</h2>
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="tab.settings">
+          <i class="icon ion-gear-a"></i>
+          <h2 class="menu-text">Offline Settings</h2>
+        </ion-item>
+        <ion-item  class="item-icon-left" nav-clear menu-close menu-close ng-click="logout()">
+          <i class="icon ion-log-out"></i>
+          <h2 class="menu-text">Logout</h2>
         </ion-item>
 
-        <ion-toggle ng-model="offline.value" ng-change="connectToggle()" toggle-class="toggle-calm">
-          Offline Mode {{offline.value}}
-        </ion-toggle>
-        <ion-item menu-close ng-click="login()">
-          Login Yo
-        </ion-item>
-        <ion-item menu-close href="#/app/browse">
-          Browse
-        </ion-item>
-        <ion-item menu-close ng-click="logout()">
-          Logout
-        </ion-item>
       </ion-list>
     </ion-content>
   </ion-side-menu>

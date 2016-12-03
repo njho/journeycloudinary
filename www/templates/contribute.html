@@ -1,4 +1,4 @@
-<ion-view >
+<ion-view>
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
@@ -6,17 +6,25 @@
     <span>  Contribute </span>
   </ion-nav-title>
 
-    <ion-header-bar class="bar bar-subheader item-input-inset">
+  <ion-header-bar class="bar bar-subheader item-input-inset">
     <label class="item-input-wrapper">
       <i class="icon ion-ios-search placeholder-icon"></i>
       <input type="search" placeholder="Search" ng-model="searchText">
     </label>
   </ion-header-bar>
 
-\ <ion-content class="has-header" scroll="true" overflow-scroll="true" has-subheader="true">
+  <ion-content class="has-header" scroll="true" overflow-scroll="true" has-subheader="true">
+    <div ng-if="searchText == null || searchText==''" class="row bookmarks-container">
+      <div class="col col-center">
+        <div class="empty-results">
+          <i class="icon ion-ios-person"></i>
+          <h3 class="no-bookmarks">Search for a user who you'd like to contribute to!</h3>
+        </div>
+      </div>
+    </div>
 
-    <div class="list">
-      <a class="item item-avatar" href="" ng-repeat="user in users | filter: searchText">
+    <div class="list" ng-if="searchText != ''">
+      <a class="item item-avatar" ng-repeat="user in users | filter: searchText | filter: limitTo: 10" href="#/tab/contribute/{{user.$id}}">
         <img src="{{user.profilePic}}">
         <h2>{{user.displayName}}</h2>
         <p>Back off, man. I'm a scientist.</p>
